@@ -68,7 +68,7 @@ export const CHANNEL_OPTIONS = {
   25: {
     key: 25,
     text: 'Moonshot AI',
-    value: 19,
+    value: 25,
     color: 'default'
   },
   23: {
@@ -93,6 +93,18 @@ export const CHANNEL_OPTIONS = {
     key: 29,
     text: 'Groq',
     value: 29,
+    color: 'default'
+  },
+  30: {
+    key: 30,
+    text: 'Ollama',
+    value: 30,
+    color: 'default'
+  },
+  31: {
+    key: 31,
+    text: '零一万物',
+    value: 31,
     color: 'default'
   },
   8: {

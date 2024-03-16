@@ -31,7 +31,7 @@ var ModelRatio = map[string]float64{
 	"gpt-4-0125-preview":      5,    // $0.01 / 1K tokens
 	"gpt-4-turbo-preview":     5,    // $0.01 / 1K tokens
 	"gpt-4-vision-preview":    5,    // $0.01 / 1K tokens
-	"gpt-3.5-turbo":           0.75, // $0.0015 / 1K tokens
+	"gpt-3.5-turbo":           0.25, // $0.0005 / 1K tokens
 	"gpt-3.5-turbo-0301":      0.75,
 	"gpt-3.5-turbo-0613":      0.75,
 	"gpt-3.5-turbo-16k":       1.5, // $0.003 / 1K tokens
@@ -69,7 +69,7 @@ var ModelRatio = map[string]float64{
 	"claude-instant-1.2":       0.8 / 1000 * USD,
 	"claude-2.0":               8.0 / 1000 * USD,
 	"claude-2.1":               8.0 / 1000 * USD,
-	"claude-3-haiku-20240229":  0.25 / 1000 * USD,
+	"claude-3-haiku-20240307":  0.25 / 1000 * USD,
 	"claude-3-sonnet-20240229": 3.0 / 1000 * USD,
 	"claude-3-opus-20240229":   15.0 / 1000 * USD,
 	// https://cloud.baidu.com/doc/WENXINWORKSHOP/s/hlrk4akp7
@@ -78,6 +78,9 @@ var ModelRatio = map[string]float64{
 	"ERNIE-Bot-4":       0.12 * RMB, // ￥0.12 / 1k tokens
 	"ERNIE-Bot-8k":      0.024 * RMB,
 	"Embedding-V1":      0.1429, // ￥0.002 / 1k tokens
+	"bge-large-zh":      0.002 * RMB,
+	"bge-large-en":      0.002 * RMB,
+	"bge-large-8k":      0.002 * RMB,
 	"PaLM-2":            1,
 	"gemini-pro":        1, // $0.00025 / 1k characters -> $0.001 / 1k tokens
 	"gemini-pro-vision": 1, // $0.00025 / 1k characters -> $0.001 / 1k tokens
@@ -130,6 +133,10 @@ var ModelRatio = map[string]float64{
 	"llama2-7b-2048":     0.1 / 1000 * USD,
 	"mixtral-8x7b-32768": 0.27 / 1000 * USD,
 	"gemma-7b-it":        0.1 / 1000 * USD,
+	// https://platform.lingyiwanwu.com/docs#-计费单元
+	"yi-34b-chat-0205": 2.5 / 1000000 * RMB,
+	"yi-34b-chat-200k": 12.0 / 1000000 * RMB,
+	"yi-vl-plus":       6.0 / 1000000 * RMB,
 }
 
 var CompletionRatio = map[string]float64{}
@@ -217,22 +224,13 @@ func GetCompletionRatio(name string) float64 {
 		return ratio
 	}
 	if strings.HasPrefix(name, "gpt-3.5") {
-		if strings.HasSuffix(name, "0125") {
+		if name == "gpt-3.5-turbo" || strings.HasSuffix(name, "0125") {
 			// https://openai.com/blog/new-embedding-models-and-api-updates
 			// Updated GPT-3.5 Turbo model and lower pricing
 			return 3
 		}
 		if strings.HasSuffix(name, "1106") {
 			return 2
-		}
-		if name == "gpt-3.5-turbo" || name == "gpt-3.5-turbo-16k" {
-			// TODO: clear this after 2023-12-11
-			now := time.Now()
-			// https://platform.openai.com/docs/models/continuous-model-upgrades
-			// if after 2023-12-11, use 2
-			if now.After(time.Date(2023, 12, 11, 0, 0, 0, 0, time.UTC)) {
-				return 2
-			}
 		}
 		return 4.0 / 3.0
 	}
